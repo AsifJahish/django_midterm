@@ -1,0 +1,45 @@
+/* General styling for the website */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-link {
+    font-size: 1.1rem;
+    padding: 10px;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+.jumbotron {
+    background-color: #007bff;
+    color: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+}
+
+.jumbotron h1 {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.jumbotron p {
+    font-size: 1.25rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}
