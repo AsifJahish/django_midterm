@@ -1,98 +1,43 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Product
+from .forms import ProductForm
 
-# Create your views here.
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
-from django.urls import reverse_lazy
-from django.utils.text import slugify
-from .models import Product, Category
-from .forms import ProductForm, CategoryForm
-from django.views.generic import TemplateView
-from .models import Category
+from .models import Product
 
-class ProductListView(ListView):
-    model = Product
-    template_name = 'products/product_list.html'
-    context_object_name = 'products'
-    paginate_by = 12
+def home(request):
+    return render(request, 'products/homep.html')
 
-    def get_queryset(self):
-        queryset = Product.objects.filter(available=True)
-        category_slug = self.kwargs.get('category_slug')
-        if category_slug:
-            category = get_object_or_404(Category, slug=category_slug)
-            queryset = queryset.filter(category=category)
-        return queryset
+def product_list(request):
+    products = Product.objects.all()
+    return render(request, 'products/product_list.html', {'products': products})
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
-        return context
+def product_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'products/product_detail.html', {'product': product})
 
-class ProductDetailView(DetailView):
-    model = Product
-    template_name = 'products/product_detail.html'
-    context_object_name = 'product'
-
-class SellerProductListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
-    model = Product
-    template_name = 'products/seller_product_list.html'
-    context_object_name = 'products'
-    paginate_by = 10
-
-    def test_func(self):
-        return hasattr(self.request.user, 'seller')
-
-    def get_queryset(self):
-        return Product.objects.filter(seller=self.request.user.seller)
-
-class ProductCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    model = Product
-    form_class = ProductForm
-    template_name = 'products/product_form.html'
-    success_url = reverse_lazy('seller_products')
-
-    def test_func(self):
-        return hasattr(self.request.user, 'seller')
-
-    def form_valid(self, form):
-        form.instance.seller = self.request.user.seller
-        form.instance.slug = slugify(form.instance.name)
-        messages.success(self.request, 'Product created successfully!')
-        return super().form_valid(form)
-
-class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Product
-    form_class = ProductForm
-    template_name = 'products/product_form.html'
-    success_url = reverse_lazy('seller_products')
-
-    def test_func(self):
-        product = self.get_object()
-        return self.request.user.seller == product.seller
-
-    def form_valid(self, form):
-        form.instance.slug = slugify(form.instance.name)
-        messages.success(self.request, 'Product updated successfully!')
-        return super().form_valid(form)
-
-class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Product
-    template_name = 'products/product_confirm_delete.html'
-    success_url = reverse_lazy('seller_products')
-
-    def test_func(self):
-        product = self.get_object()
-        return self.request.user.seller == product.seller
+def add_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)  # Include request.FILES
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.seller = request.user  # Associate product with the logged-in user
+            product.save()
+            return redirect('product_list')
+    else:
+        form = ProductForm()
+    return render(request, 'products/add_product.html', {'form': form})
 
 
-class HomeView(TemplateView):
-    template_name = 'homep.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()  # Make sure you're passing categories to the template
-        return context
+def delete_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    
+    if request.method == 'POST':
+        product.delete()
+        messages.success(request, 'Product deleted successfully.')
+        return redirect('product_list')  # Redirect back to the product list
+    
+    # Not expecting a GET request here
+    return redirect('product_detail', pk=pk)

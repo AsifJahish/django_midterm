@@ -1,79 +1,27 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends 'homep.html' %}
 
-{% block title %}Products{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/products/product_list.css' %}">
-{% endblock %}
-
+{% load static %}  
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <!-- Categories Sidebar -->
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Categories</h5>
-                </div>
-                <div class="list-group list-group-flush">
-                    <a href="{% url 'product_list' %}" class="list-group-item list-group-item-action">All Products</a>
-                    {% for category in categories %}
-                        <a href="{% url 'product_list_by_category' category.slug %}" 
-                           class="list-group-item list-group-item-action">
-                            {{ category.name }}
-                        </a>
-                    {% endfor %}
+    <link rel="stylesheet" href="{% static 'css/product_list.css' %}">
+    <h1 class="page-title">Product List</h1>
+    <div class="product-container">
+        {% for product in products %}
+            <div class="product-card">
+                <a href="{% url 'product_detail' product.pk %}">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image"/>
+                    {% else %}
+                        <div class="no-image">No image available</div>
+                    {% endif %}
+                    <h2 class="product-name">{{ product.name }}</h2>
+                    <p class="product-price">${{ product.price }}</p>
+                    <p class="product-description">{{ product.description|truncatewords:15 }}</p>
+                </a>
+                <div class="add-to-cart">
+                    <button class="btn">Add to Cart</button>
                 </div>
             </div>
-        </div>
-
-        <!-- Products Grid -->
-        <div class="col-md-9">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                {% for product in products %}
-                    <div class="col">
-                        <div class="card h-100">
-                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ product.name }}</h5>
-                                <p class="card-text text-muted">${{ product.price }}</p>
-                                <a href="{{ product.get_absolute_url }}" class="btn btn-primary">View Details</a>
-                            </div>
-                        </div>
-                    </div>
-                {% empty %}
-                    <div class="col-12">
-                        <p>No products found.</p>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <!-- Pagination -->
-            {% if is_paginated %}
-            <nav class="mt-4">
-                <ul class="pagination justify-content-center">
-                    {% if page_obj.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                        </li>
-                    {% endif %}
-
-                    {% for num in page_obj.paginator.page_range %}
-                        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                        </li>
-                    {% endfor %}
-
-                    {% if page_obj.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
-            {% endif %}
-        </div>
+        {% endfor %}
     </div>
-</div>
 {% endblock %}

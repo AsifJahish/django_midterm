@@ -1,12 +1,19 @@
 from django.urls import path
-from . import views
+from .views import home, product_list, product_detail, add_product
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+from django.urls import path
+from . import views 
 
 urlpatterns = [
-    path('', views.HomeView.as_view(), name='products'),
-    path('category/<slug:category_slug>/', views.ProductListView.as_view(), name='product_list_by_category'),
-    path('product/<slug:slug>/', views.ProductDetailView.as_view(), name='product_detail'),
-    path('seller/products/', views.SellerProductListView.as_view(), name='seller_products'),
-    path('seller/product/add/', views.ProductCreateView.as_view(), name='product_create'),
-    path('seller/product/<slug:slug>/edit/', views.ProductUpdateView.as_view(), name='product_update'),
-    path('seller/product/<slug:slug>/delete/', views.ProductDeleteView.as_view(), name='product_delete'),
+    path('', home, name='home'),
+    path('products/', product_list, name='product_list'),
+    path('products/add/', add_product, name='add_product'),
+    path('products/<int:pk>/', product_detail, name='product_detail'),
+    path('products/delete/<int:pk>/', views.delete_product, name='delete_product'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

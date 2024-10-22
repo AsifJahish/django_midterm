@@ -53,11 +53,40 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'onlineStore.urls'
 
+# TEMPLATES = [
+#     {
+#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         'DIRS': [BASE_DIR / 'templates'],
+#         'APP_DIRS': True,
+#         'OPTIONS': {
+#             'context_processors': [
+#                 'django.template.context_processors.debug',
+#                 'django.template.context_processors.request',
+#                 'django.contrib.auth.context_processors.auth',
+#                 'django.contrib.messages.context_processors.messages',
+#             ],
+#         },
+#     },
+# ]
+
+import os
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Adjust if necessary
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Template settings
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
+        'DIRS': [
+            BASE_DIR / 'productsList' / 'templates/products',
+            BASE_DIR / 'userApp' / 'templates',
+        ],
+        'APP_DIRS': True,  # This will look for templates in each app's templates directory
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -68,6 +97,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'onlineStore.wsgi.application'
 
