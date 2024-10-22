@@ -19,3 +19,16 @@ class SellerProfileForm(forms.ModelForm):
     class Meta:
         model = Seller
         fields = ['company_name', 'tax_id']
+
+
+
+
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'})
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})
+    )
