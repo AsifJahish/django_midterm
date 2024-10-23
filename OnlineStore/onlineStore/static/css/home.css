@@ -10,7 +10,7 @@ body {
 
 /* Jumbotron Styles */
 .jumbotron {
-    background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Gradient background */
+    background: linear-gradient(135deg, #4f514f, #4f514f); /* Gradient background */
     color: white;
     text-align: center;
     padding: 3rem 1rem;
@@ -40,12 +40,12 @@ body {
 }
 
 .jumbotron .btn-primary {
-    background-color: #ff7e5f;
+    background-color: #4f514f;
     border: none;
 }
 
 .jumbotron .btn-primary:hover {
-    background-color: #ff4e2b;
+    background-color: #4f514f;
     transform: translateY(-3px);
 }
 
