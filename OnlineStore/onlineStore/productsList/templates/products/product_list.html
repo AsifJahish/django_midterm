@@ -1,6 +1,4 @@
 {% extends 'homep.html' %}
-
-
 {% load static %}  
 {% block content %}
     <link rel="stylesheet" href="{% static 'css/product_list.css' %}">
@@ -20,6 +18,13 @@
                 </a>
                 <div class="add-to-cart">
                     <button class="btn">Add to Cart</button>
+                </div>
+                <!-- Chat with Seller Button -->
+                <div class="chat-with-seller">
+                    <a href="{% url 'chat_room' product.seller.id %}" class="chat-icon">
+                        <img src="{% static 'icons/chat.png' %}" alt="Chat with Seller" />
+                        Chat with Seller
+                    </a>
                 </div>
             </div>
         {% endfor %}

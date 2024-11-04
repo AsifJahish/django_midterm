@@ -99,3 +99,33 @@ body {
 .btn:hover {
     background-color: #45a049; /* Darker green */
 }
+
+
+.chat-with-seller {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.chat-icon img {
+    width: 2px;       /* Set width of the icon */
+    height: 2px;      /* Set height of the icon */
+    margin-right: 8px; /* Space between the icon and the text */
+}
+
+.chat-with-seller a {
+    color: #333;          /* Text color */
+    text-decoration: none; /* Remove underline from the link */
+    font-size: 16px;      /* Font size of the link text */
+    font-weight: 500;     /* Font weight of the link text */
+}
+
+.chat-with-seller a:hover {
+    color: #007bff;       /* Change text color on hover */
+    text-decoration: underline; /* Underline text on hover */
+}
+
+.chat-with-seller:hover .chat-icon img {
+    transform: scale(1.1); /* Slightly enlarge icon on hover */
+    transition: transform 0.2s ease;
+}

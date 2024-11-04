@@ -21,11 +21,15 @@ from django.conf import settings
 
 from django.conf.urls.static import static
 
+from messageapp import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('userApp.urls')),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('home/', include('productsList.urls')),
+    path('chat/<int:chat_room_id>/', views.chat_room, name='chat_room'),
+    path('chat/<int:chat_room_id>/send/', views.send_message, name='send_message'),
 ]
 
 if settings.DEBUG:
