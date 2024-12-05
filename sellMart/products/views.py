@@ -136,3 +136,25 @@ def cart_items(request):
     items = cart.items.select_related('product')  # Optimize query with related data
 
     return render(request, 'cart_items.html', {'items': items})
+
+
+# products/views.py
+
+from chat.models import ChatRoom  # Import the ChatRoom model from the chat app
+
+
+@login_required
+def create_or_open_chat(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    # Find the seller (assuming the seller is the creator of the product)
+    seller = product.created_by
+    
+    # Check if a chat room already exists between the buyer and seller for this product
+    chat_room, created = ChatRoom.objects.get_or_create(
+        buyer=request.user,
+        seller=seller,
+        product=product
+    )
+
+    # Redirect to the chat room view
+    return redirect('chat-room', chatroom_id=chat_room.id)

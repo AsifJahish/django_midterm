@@ -1,4 +1,5 @@
 <!-- templates/product_list.html -->
+<!-- templates/products/product_list.html -->
 {% extends 'basep.html' %}
 {% load static %}
 
@@ -26,6 +27,12 @@
                         {% csrf_token %}
                         <button type="submit" class="add-to-cart-btn">Add to Cart</button>
                     </form>
+
+                    <!-- Message to seller button -->
+                    <form method="post" action="{% url 'message-to-seller' product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="message-to-seller-btn">Message to Seller</button>
+                    </form>
                 </div>
             </div>
         {% empty %}
@@ -34,3 +41,4 @@
     </div>
 </div>
 {% endblock %}
+

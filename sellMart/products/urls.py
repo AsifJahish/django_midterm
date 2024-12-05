@@ -32,4 +32,7 @@ urlpatterns = [
 
     path('logout/', LogoutView.as_view(), name='logout'),
 
+
+     path('product/<int:product_id>/message/', views.create_or_open_chat, name='message-to-seller'),
+
 ]

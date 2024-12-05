@@ -1,28 +1,37 @@
-{% extends 'base.html' %}
+{% extends 'basep.html' %}
 
 {% load static %}
 
-{% block title %}Chat Room{% endblock %}
-
 {% block content %}
-<h2>Chat Room</h2>
-
-<div id="chat-room">
-    <h3>Chat with {{ chat_room.seller_username }}</h3>
-    <div id="messages">
-        {% for message in chat_room.messages %}
-            <div class="{% if message.sender == user %}my-message{% else %}their-message{% endif %}">
-                <strong>{{ message.sender_username }}:</strong>
-                <p>{{ message.content }}</p>
-                <span>{{ message.sent_at|date:"M d, Y H:i" }}</span>
+<div class="chat-container">
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+    <div class="chat-header">
+        <h2>Chat with {{ chat_room.seller.username }} about {{ chat_room.product.name }}</h2>
+    </div>
+    <div class="chat-messages">
+        {% for message in chat_room.messages.all %}
+            <div class="message {% if message.sender == request.user %}sent{% else %}received{% endif %}">
+                <div class="message-content">
+                    <strong>{{ message.sender.username }}:</strong> {{ message.content }}
+                </div>
+                <div class="message-time">
+                    <small>{{ message.sent_at|date:"H:i" }}</small>
+                </div>
             </div>
+        {% empty %}
+            <p>No messages yet.</p>
         {% endfor %}
     </div>
+    <div class="chat-input">
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="message" placeholder="Type a message..." required></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </div>
 </div>
+{% endblock %}
 
-<form id="send-message-form" method="post" action="{% url 'chat-message-create' chat_room.id %}">
-    {% csrf_token %}
-    <textarea name="content" placeholder="Type your message here..." required></textarea>
-    <button type="submit">Send</button>
-</form>
+{% block extra_styles %}
+
 {% endblock %}
