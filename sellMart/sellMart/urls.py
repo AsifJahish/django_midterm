@@ -21,13 +21,18 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from rest_framework.authtoken.views import obtain_auth_token
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('users.urls')),
+    path('users/', include('users.urls')),
     path('products/', include('products.urls')),
     path('chat/', include('chat.urls')),
     path('reviews/', include('review.urls')),
+    path('order/', include('orders.urls')),
+
+
     
 ]
 # Serving media files during development
