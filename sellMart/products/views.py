@@ -49,3 +49,33 @@ class CartItemRemoveView(generics.DestroyAPIView):
             raise PermissionDenied("Only buyers can remove items from the cart.")
         cart = Cart.objects.get(buyer=self.request.user)
         return cart.items
+
+
+
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Product
+from .forms import ProductForm
+
+# Product Views
+def product_list(request):
+    products = Product.objects.all()
+    return render(request, 'product_list.html', {'products': products})
+
+@login_required
+def product_create(request):
+    if request.user.user_type != 'seller':
+        return redirect('product-list')  # Redirect to the product list if not a seller
+    
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.created_by = request.user
+            product.save()
+            return redirect('product-list')  # Redirect to the product list after successful creation
+    else:
+        form = ProductForm()
+
+    return render(request, 'product_add.html', {'form': form})

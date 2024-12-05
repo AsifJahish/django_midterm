@@ -57,10 +57,32 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'sellMart.urls'
 
+# TEMPLATES = [
+#     {
+#         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#         'DIRS': [],
+#         'APP_DIRS': True,
+#         'OPTIONS': {
+#             'context_processors': [
+#                 'django.template.context_processors.debug',
+#                 'django.template.context_processors.request',
+#                 'django.contrib.auth.context_processors.auth',
+#                 'django.contrib.messages.context_processors.messages',
+#             ],
+#         },
+#     },
+# ]
+
+
+# settings.py
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            # BASE_DIR / 'chat/templates', 
+            BASE_DIR / 'products/templates',  # For common templates
+            BASE_DIR / 'users/templates',  # Add this line to tell Django to look for templates in the 'templates' folder at the base directory
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,6 +94,8 @@ TEMPLATES = [
         },
     },
 ]
+
+
 
 WSGI_APPLICATION = 'sellMart.wsgi.application'
 
@@ -108,6 +132,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
+
+
+STATIC_URL = '/static/'
+
+# Optional: if you're using custom static directories
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 
 LANGUAGE_CODE = 'en-us'
 

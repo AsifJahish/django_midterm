@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Chat Room{% endblock %}
+
+{% block content %}
+<h2>Chat Room</h2>
+
+<div id="chat-room">
+    <h3>Chat with {{ chat_room.seller_username }}</h3>
+    <div id="messages">
+        {% for message in chat_room.messages %}
+            <div class="{% if message.sender == user %}my-message{% else %}their-message{% endif %}">
+                <strong>{{ message.sender_username }}:</strong>
+                <p>{{ message.content }}</p>
+                <span>{{ message.sent_at|date:"M d, Y H:i" }}</span>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<form id="send-message-form" method="post" action="{% url 'chat-message-create' chat_room.id %}">
+    {% csrf_token %}
+    <textarea name="content" placeholder="Type your message here..." required></textarea>
+    <button type="submit">Send</button>
+</form>
+{% endblock %}

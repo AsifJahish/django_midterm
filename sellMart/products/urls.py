@@ -4,6 +4,10 @@ from .views import (
     CartDetailView, CartItemAddView, CartItemRemoveView
 )
 
+from .views import product_list, product_create
+
+from django.contrib.auth.views import LogoutView
+
 urlpatterns = [
     # Product URLs
     path('products/create/', ProductCreateView.as_view(), name='product-create'),
@@ -13,4 +17,11 @@ urlpatterns = [
     path('cart/', CartDetailView.as_view(), name='cart-detail'),
     path('cart/add/', CartItemAddView.as_view(), name='cart-item-add'),
     path('cart/remove/<int:pk>/', CartItemRemoveView.as_view(), name='cart-item-remove'),
+
+
+    path('list/', product_list, name='product-list'),
+    path('productscreate', product_create, name='product-create'),
+
+    path('logout/', LogoutView.as_view(), name='logout'),
+
 ]

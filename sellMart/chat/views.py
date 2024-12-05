@@ -30,3 +30,11 @@ class ChatRoomListView(generics.ListAPIView):
 
     def get_queryset(self):
         return ChatRoom.objects.filter(buyer=self.request.user) | ChatRoom.objects.filter(seller=self.request.user)
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import ChatRoom
+
+def chat_room_view(request, chatroom_id):
+    chat_room = get_object_or_404(ChatRoom, id=chatroom_id)
+    return render(request, 'chat.html', {'chat_room': chat_room})
