@@ -79,3 +79,60 @@ def product_create(request):
         form = ProductForm()
 
     return render(request, 'product_add.html', {'form': form})
+
+
+
+
+# @login_required
+# def add_to_cart(request, product_id):
+#     if request.user.user_type != 'buyer':
+#         return JsonResponse({'error': 'Only buyers can add items to the cart.'}, status=403)
+
+#     product = get_object_or_404(Product, id=product_id)
+#     cart, created = Cart.objects.get_or_create(buyer=request.user)
+#     cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+#     if not item_created:  # If the item already exists in the cart, increase the quantity
+#         cart_item.quantity += 1
+#         cart_item.save()
+
+#     return JsonResponse({'message': f'{product.name} added to cart.', 'cart_item_count': cart_item.quantity})
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Product, Cart, CartItem
+
+@login_required
+def add_to_cart(request, product_id):
+    # Get the product to be added to the cart
+    product = get_object_or_404(Product, id=product_id)
+
+    # Get or create the user's cart
+    cart, created = Cart.objects.get_or_create(buyer=request.user)
+
+    # Add the product to the cart (if it already exists, increase the quantity)
+    cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+    # If the item already exists in the cart, increase its quantity
+    if not item_created:
+        cart_item.quantity += 1
+    else:
+        cart_item.quantity = 1  # Ensure quantity is set to 1 if it's a new item
+
+    # Save the cart item with the correct quantity
+    cart_item.save()
+
+    # Redirect the user to the cart items page (where they can view the cart)
+    return redirect('cart-items')  # Make sure this URL name matches your cart items page URL
+
+
+@login_required
+def cart_items(request):
+    if request.user.user_type != 'buyer':
+        return redirect('product-list')  # Redirect non-buyers to the product list
+
+    cart, created = Cart.objects.get_or_create(buyer=request.user)
+    items = cart.items.select_related('product')  # Optimize query with related data
+
+    return render(request, 'cart_items.html', {'items': items})

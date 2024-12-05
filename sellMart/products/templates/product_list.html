@@ -1,13 +1,9 @@
 <!-- templates/product_list.html -->
-
 {% extends 'basep.html' %}
-
-
 {% load static %}
 
 {% block content %}
 <div class="product-list-container">
-
     <link rel="stylesheet" href="{% static 'css/product_list.css' %}">
 
     <h1 class="title">Shop the Latest Products</h1>
@@ -24,8 +20,12 @@
                     <p class="product-description">{{ product.description }}</p>
                     <p class="product-price">$ {{ product.price }}</p>
                     <p class="product-category">Category: {{ product.category }}</p>
-                    <p class="product-creator">Created by: {{ product.created_by.username }}</p>
-                    <button class="add-to-cart-btn">Add to Cart</button>
+
+                    <!-- Form to add the product to the cart -->
+                    <form method="post" action="{% url 'add-to-cart' product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                    </form>
                 </div>
             </div>
         {% empty %}

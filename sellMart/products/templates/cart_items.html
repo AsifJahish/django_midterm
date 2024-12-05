@@ -1,0 +1,28 @@
+
+
+{% extends 'basep.html' %}
+{% load static %}
+
+{% block content %}
+<div class="cart-container">
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <h1>Your Cart</h1>
+    <div class="cart-items">
+        {% for item in items %}
+        <div class="cart-item">
+            {% if item.product.image %}
+                <img class="cart-item-image" src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+            {% endif %}
+            <div class="cart-item-info">
+                <h3>{{ item.product.name }}</h3>
+                <p>Price: ${{ item.product.price }}</p>
+                <p>Quantity: {{ item.quantity }}</p>
+                <p>Total: ${{ item.total_price }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <p>Your cart is empty.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,14 +1,19 @@
 <!-- templates/product_add.html -->
 {% extends 'basep.html' %}
-
-
 {% load static %}
 
 {% block content %}
-    <h1>Add New Product</h1>
-    <form method="POST" enctype="multipart/form-data">
+<div class="form-container">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/product_form.css' %}">
+
+    <h1 class="form-title">Add New Product</h1>
+    <form method="POST" enctype="multipart/form-data" class="product-form">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Add Product</button>
+        <div class="form-fields">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="submit-btn">Add Product</button>
     </form>
+</div>
 {% endblock %}
